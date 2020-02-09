@@ -12,7 +12,6 @@ document.querySelector("#chat_form").addEventListener("submit", (e) => {
 });
 
 document.querySelector("#send_location").addEventListener("click", () => {
-    let location = new Object();
 
     if (!navigator.geolocation) {
         return alert("Geolocation is not supported by your broswer");
