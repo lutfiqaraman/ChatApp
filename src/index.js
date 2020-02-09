@@ -15,8 +15,14 @@ app.use(express.static(publicDir));
 io.on("connection", (socket) => {
     console.log("New WebSocket Connection");
 
+    socket.broadcast.emit("message", "A new user has joined !");
+
     socket.on("sendMsg", (message) => {
         io.emit("message", message);
+    });
+
+    socket.on("disconnect", () => {
+        io.emit("message", "a user has left");
     });
 });
 
