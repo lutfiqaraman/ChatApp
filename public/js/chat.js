@@ -12,6 +12,11 @@ const url = document.querySelector("#url_location");
 const msgTemplate = document.querySelector("#message-template").innerHTML;
 const locationTemplate = document.querySelector("#locaion-message-template").innerHTML;
 
+// Options
+const { username, chatroom } = Qs.parse(location.search, {
+    ignoreQueryPrefix: true
+});
+
 socket.on("message", (message) => {
     console.log(message);
     const htmlContent = Mustache.render(msgTemplate, {
@@ -61,3 +66,5 @@ sendLocationButton.addEventListener("click", () => {
         }); 
     });
 });
+
+socket.emit("loginInfo", { username, chatroom });
