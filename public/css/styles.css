@@ -58,6 +58,10 @@ button:disabled {
 
 /* Join Page Styles */
 
+.header {
+    padding-bottom: 0.5em;
+}
+
 .centered-form {
     background: #333744;
     width: 100vw;
