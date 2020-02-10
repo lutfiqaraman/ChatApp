@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendLocation", (coords, callback) => {
-        io.emit("message", `https://google.com/maps?q=${coords.lat},${coords.lang}`);
+        io.emit("locationMsg", `https://google.com/maps?q=${coords.lat},${coords.lang}`);
         callback();
     });
 

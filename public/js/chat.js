@@ -6,9 +6,11 @@ const chatFormInput = chatForm.querySelector("input");
 const chatFormSendButton = chatForm.querySelector("button");
 const sendLocationButton = document.querySelector("#send_location");
 const msgs = document.querySelector("#messages");
+const url = document.querySelector("#url_location");
 
 // Templates
 const msgTemplate = document.querySelector("#message-template").innerHTML;
+const locationTemplate = document.querySelector("#locaion-message-template").innerHTML;
 
 socket.on("message", (message) => {
     console.log(message);
@@ -16,6 +18,14 @@ socket.on("message", (message) => {
         msg: message
     });
     msgs.insertAdjacentHTML("beforeend", htmlContent);
+});
+
+socket.on("locationMsg", (url) => {
+    console.log(url);
+    const htmlLocationLink = Mustache.render( locationTemplate, {
+        url
+    });
+    msgs.insertAdjacentHTML("beforeend", htmlLocationLink);
 });
 
 chatForm.addEventListener("submit", (e) => {
