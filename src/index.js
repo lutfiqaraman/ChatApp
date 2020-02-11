@@ -31,22 +31,27 @@ io.on("connection", socket => {
 
     socket.join(user.chatroom);
 
-    socket.emit("message", msg.generateMsg("Welcome !"));
+    socket.emit("message", msg.generateMsg("Admin", "Welcome !"));
     socket.broadcast
       .to(user.chatroom)
-      .emit("message", msg.generateMsg(`${user.username} has joined ... `));
+      .emit("message", msg.generateMsg("Admin", `${user.username} has joined ... `));
 
     callback();
   });
 
   socket.on("sendMsg", (message, callback) => {
-    io.emit("message", msg.generateMsg(message));
-    callback("Delivered");
+    const user = users.getUser(socket.id);
+    io.to(user.chatroom).emit("message", msg.generateMsg(user.username, message));
+
+    callback();
   });
 
   socket.on("sendLocation", (coords, callback) => {
+    const user = users.getUser(socket.id);
     const url = `https://google.com/maps?q=${coords.lat},${coords.lang}`;
-    io.emit("locationMsg", msg.generateLocationMsg(url));
+
+    io.to(user.chatroom).emit("locationMsg", msg.generateLocationMsg(user.username, url));
+
     callback();
   });
 
@@ -56,7 +61,7 @@ io.on("connection", socket => {
     if (user) {
       io.to(user.chatroom).emit(
         "message",
-        msg.generateMsg(`${user.username} has left ...`)
+        msg.generateMsg("Admin", `${user.username} has left ...`)
       );
     }
   });

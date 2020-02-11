@@ -18,20 +18,22 @@ const { username, chatroom } = Qs.parse(location.search, {
 });
 
 socket.on("message", (message) => {
-    console.log(message);
     const htmlContent = Mustache.render(msgTemplate, {
+        username: message.username,
         msg: message.text,
         createdAt: moment(message.createdAt).format("HH:mm")
     });
+
     msgs.insertAdjacentHTML("beforeend", htmlContent);
 });
 
 socket.on("locationMsg", (urlContent) => {
-    console.log(urlContent);
     const htmlLocationLink = Mustache.render( locationTemplate, {
+        username: urlContent.username,
         url: urlContent.url,
         createdAt: moment(urlContent.createdAt).format("HH:mm")
     });
+
     msgs.insertAdjacentHTML("beforeend", htmlLocationLink);
 });
 
