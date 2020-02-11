@@ -1,5 +1,5 @@
 # ChatApp
-A chat app was created using Nodejs and socket.io
+A real-time chat app was created using Nodejs and socket.io
 
 *Note: There is no database this is just a mockup*
 
