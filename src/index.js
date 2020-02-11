@@ -4,6 +4,7 @@ const express = require("express");
 const socketio = require("socket.io");
 
 const msg = require("../utils/messages");
+const users = require("../utils/users");
 
 const app = express();
 const server = http.createServer(app);
@@ -17,13 +18,21 @@ app.use(express.static(publicDir));
 io.on("connection", socket => {
   console.log("New WebSocket Connection");
 
-  socket.on("loginInfo", ({ username, chatroom }) => {
-    socket.join(chatroom);
+  socket.on("loginInfo", ({ username, chatroom }, callback) => {
+    const {error, user} = users.addUser({ id: socket.id, username, chatroom });
+
+    if (error) {
+      return callback(error);
+    }
+
+    socket.join(user.chatroom);
 
     socket.emit("message", msg.generateMsg("Welcome !"));
     socket.broadcast
-      .to(chatroom)
-      .emit("message", msg.generateMsg(`${username} has joined ... `));
+      .to(user.chatroom)
+      .emit("message", msg.generateMsg(`${user.username} has joined ... `));
+
+    callback();
   });
 
   socket.on("sendMsg", (message, callback) => {
@@ -38,7 +47,12 @@ io.on("connection", socket => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", msg.generateMsg("a user has left"));
+    const user = users.removeUser(socket.id);
+    
+    if (user) {
+      io.to(user.chatroom).emit("message", msg.generateMsg(`${user.username} has left ...`));
+    }
+    
   });
 });
 

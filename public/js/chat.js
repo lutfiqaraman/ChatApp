@@ -67,4 +67,9 @@ sendLocationButton.addEventListener("click", () => {
     });
 });
 
-socket.emit("loginInfo", { username, chatroom });
+socket.emit("loginInfo", { username, chatroom }, (error) => {
+    if (error) {
+        alert(error);
+        location.href = "/";
+    }
+});
