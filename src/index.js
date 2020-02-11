@@ -19,7 +19,11 @@ io.on("connection", socket => {
   console.log("New WebSocket Connection");
 
   socket.on("loginInfo", ({ username, chatroom }, callback) => {
-    const {error, user} = users.addUser({ id: socket.id, username, chatroom });
+    const { error, user } = users.addUser({
+      id: socket.id,
+      username,
+      chatroom
+    });
 
     if (error) {
       return callback(error);
@@ -48,11 +52,13 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     const user = users.removeUser(socket.id);
-    
+
     if (user) {
-      io.to(user.chatroom).emit("message", msg.generateMsg(`${user.username} has left ...`));
+      io.to(user.chatroom).emit(
+        "message",
+        msg.generateMsg(`${user.username} has left ...`)
+      );
     }
-    
   });
 });
 
