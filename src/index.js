@@ -32,9 +32,15 @@ io.on("connection", socket => {
     socket.join(user.chatroom);
 
     socket.emit("message", msg.generateMsg("Admin", "Welcome !"));
+
     socket.broadcast
       .to(user.chatroom)
       .emit("message", msg.generateMsg("Admin", `${user.username} has joined ... `));
+    
+    io.to(user.chatroom).emit("roomData", {
+      chatroom: user.chatroom,
+      userslist: users.getUsersInRoom(user.chatroom)
+    });
 
     callback();
   });
@@ -63,6 +69,13 @@ io.on("connection", socket => {
         "message",
         msg.generateMsg("Admin", `${user.username} has left ...`)
       );
+
+      io.to(user.chatroom).emit(
+        "roomData", {
+          chatroom: user.chatroom,
+          userslist: users.getUsersInRoom(user.chatroom)
+        }
+      )
     }
   });
 });
